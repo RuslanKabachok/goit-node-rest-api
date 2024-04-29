@@ -67,4 +67,5 @@ export default {
   getContactById,
   removeContact,
   addContact,
+  updateContact,
 };
