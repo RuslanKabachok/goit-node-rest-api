@@ -6,12 +6,6 @@
     "phone": "(992) 914-3792"
   },
   {
-    "id": "qdggE76Jtbfd9eWJHrssH",
-    "name": "Bat man",
-    "email": "bat.man@mail.com",
-    "phone": "(123) 456-7890"
-  },
-  {
     "id": "drsAJ4SHPYqZeG-83QTVW",
     "name": "Kennedy Lane",
     "email": "mattis.Cras@nonenimMauris.net",
@@ -58,5 +52,11 @@
     "name": "Alec Howard",
     "email": "Donec.elementum@scelerisquescelerisquedui.net",
     "phone": "(748) 206-2688"
+  },
+  {
+    "name": "Super Man",
+    "email": "superman@mail.com",
+    "phone": "(910) 164-0010",
+    "id": "cc42a64f-a452-4d09-ad69-dd41eac87680"
   }
 ]
