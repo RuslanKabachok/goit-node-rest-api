@@ -3,11 +3,16 @@ import {
   createContactSchema,
   updateContactSchema,
 } from '../schemas/contactsSchemas.js';
+import Contact from '../models/contact.js';
 
 export const getAllContacts = async (req, res, next) => {
-  const contactList = await contactsService.listContacts();
+  try {
+    const contacts = await Contact.find();
 
-  res.status(200).json(contactList);
+    res.send(contacts);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const getOneContact = async (req, res) => {
@@ -32,16 +37,26 @@ export const deleteContact = async (req, res) => {
   }
 };
 
-export const createContact = async (req, res) => {
-  const { error } = createContactSchema.validate(req.body);
-  const { name, email, phone } = req.body;
+export const createContact = async (req, res, next) => {
+  // const { error } = createContactSchema.validate(req.body);
 
-  if (error) {
-    return res.status(400).json({ message: error.message });
+  // if (error) {
+  //   return res.status(400).json({ message: error.message });
+  // }
+
+  const contact = {
+    name: req.body.name,
+    email: req.body.email,
+    phone: req.body.phone,
+    favorite: req.body.favorite,
+  };
+
+  try {
+    await Contact.create(contact);
+    res.status(201).send('Success!');
+  } catch (error) {
+    next(error);
   }
-
-  const newContact = await contactsService.addContact(name, email, phone);
-  return res.status(201).json(newContact);
 };
 
 export const updateContact = async (req, res) => {
