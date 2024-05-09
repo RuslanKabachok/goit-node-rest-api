@@ -1,6 +1,7 @@
 import * as fs from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import Contact from '../models/contact.js';
 
 const contactsPath = path.resolve('db', 'contacts.json');
 
