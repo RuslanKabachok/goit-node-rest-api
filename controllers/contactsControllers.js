@@ -38,11 +38,11 @@ export const deleteContact = async (req, res) => {
 };
 
 export const createContact = async (req, res, next) => {
-  // const { error } = createContactSchema.validate(req.body);
+  const { error } = createContactSchema.validate(req.body);
 
-  // if (error) {
-  //   return res.status(400).json({ message: error.message });
-  // }
+  if (error) {
+    return res.status(400).json({ message: error.message });
+  }
 
   const contact = {
     name: req.body.name,
