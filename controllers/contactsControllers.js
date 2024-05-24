@@ -2,6 +2,7 @@ import contactsService from '../services/contactsServices.js';
 import {
   createContactSchema,
   updateContactSchema,
+  updateFavoriteSchema,
 } from '../schemas/contactsSchemas.js';
 import Contact from '../models/contact.js';
 
@@ -86,6 +87,30 @@ export const updateContact = async (req, res, next) => {
     }
 
     res.send(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateStatusContact = async (req, res, next) => {
+  const { error } = updateFavoriteSchema.validate(req.body);
+
+  if (error) {
+    return res.status(400).json({ message: error.message });
+  }
+
+  const contactId = req.params.id;
+
+  const favorite = { favorite: req.body.favorite };
+
+  try {
+    const result = await Contact.findByIdAndUpdate(contactId, favorite, {
+      new: true,
+    });
+    if (result === null) {
+      return res.status(404).send('Not found');
+    }
+    return res.status(200).json(result);
   } catch (error) {
     next(error);
   }
