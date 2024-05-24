@@ -15,25 +15,31 @@ export const getAllContacts = async (req, res, next) => {
   }
 };
 
-export const getOneContact = async (req, res) => {
+export const getOneContact = async (req, res, next) => {
   const contactId = req.params.id;
-  const contact = await contactsService.getContactById(contactId);
 
-  if (contact) {
-    res.status(200).json(contact);
-  } else {
-    res.status(404).json({ message: 'Not found' });
+  try {
+    const contact = await Contact.findById(contactId);
+    if (contact === null) {
+      return res.status(404).send('Book not found');
+    }
+    res.send(contact);
+  } catch (error) {
+    next(error);
   }
 };
 
 export const deleteContact = async (req, res) => {
   const contactId = req.params.id;
-  const contact = await contactsService.removeContact(contactId);
 
-  if (contact) {
-    res.status(200).json(contact);
-  } else {
-    res.status(404).json({ message: 'Not found' });
+  try {
+    const result = await Contact.findByIdAndDelete(contactId);
+    if (result === null) {
+      return res.status(404).send('Book not found');
+    }
+    res.send(contactId);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -59,22 +65,28 @@ export const createContact = async (req, res, next) => {
   }
 };
 
-export const updateContact = async (req, res) => {
+export const updateContact = async (req, res, next) => {
   const { error } = updateContactSchema.validate(req.body);
+  const contactId = req.params.id;
 
-  if (error) {
-    return res
-      .status(400)
-      .json({ message: 'Body must have at least one field' });
+  const contact = {
+    name: req.body.name,
+    email: req.body.email,
+    phone: req.body.phone,
+    favorite: req.body.favorite,
+  };
+
+  try {
+    const result = await Contact.findByIdAndUpdate(contactId, contact, {
+      new: true,
+    });
+
+    if (result === null) {
+      return res.status(404).send('Book not found');
+    }
+
+    res.send(result);
+  } catch (error) {
+    next(error);
   }
-
-  const { id } = req.params;
-
-  const updatedContact = await contactsService.updateContact(id, req.body);
-
-  if (!updatedContact) {
-    return res.status(404).json({ message: 'Not found' });
-  }
-
-  return res.status(200).json(updatedContact);
 };
