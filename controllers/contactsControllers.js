@@ -1,4 +1,3 @@
-import contactsService from '../services/contactsServices.js';
 import {
   createContactSchema,
   updateContactSchema,
