@@ -2,12 +2,12 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import User from '../models/users.js';
-import { registerUserSchema } from '../schemas/usersSchemas.js';
+import { userSchema } from '../schemas/usersSchemas.js';
 
 export const register = async (req, res, next) => {
   const { password, email } = req.body;
 
-  const { error } = registerUserSchema.validate({ password, email });
+  const { error } = userSchema.validate({ password, email });
 
   if (error) {
     return res.status(400).json({ message: error.message });
