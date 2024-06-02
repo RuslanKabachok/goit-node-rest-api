@@ -3,11 +3,13 @@ import User from '../models/users.js';
 import { userSchema } from '../schemas/usersSchemas.js';
 
 function auth(req, res, next) {
-  const authorzationHeader = req.headers.authorzation;
+  const authorizationHeader = req.headers.authorization;
 
-  if (typeof authorzationHeader === 'undefined') {
+  if (typeof authorizationHeader === 'undefined') {
     return res.status(401).send({ message: 'Not authorized' });
   }
+
+  const [bearer, token] = authorizationHeader.split(' ', 2);
 
   if (bearer !== 'Bearer') {
     return res.status(401).send({ message: 'Not authorized' });
@@ -17,6 +19,7 @@ function auth(req, res, next) {
     if (err) {
       return res.status(401).send({ message: 'Not authorized' });
     }
+
     try {
       const user = await User.findById(decode.id);
 
@@ -31,11 +34,12 @@ function auth(req, res, next) {
       req.user = {
         id: user._id,
         name: user.name,
+        email: user.email,
       };
 
       next();
     } catch (error) {
-      next();
+      next(error);
     }
   });
 }

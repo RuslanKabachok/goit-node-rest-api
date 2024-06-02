@@ -36,6 +36,7 @@ export const register = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   const { email, password } = req.body;
+  console.log(req.body);
 
   const emailInLowerCase = email.toLowerCase();
 
@@ -61,7 +62,43 @@ export const login = async (req, res, next) => {
       { expiresIn: '10h' }
     );
 
+    await User.findByIdAndUpdate(user._id, { token });
+
     res.send({ token });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const logout = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    if (user === null) {
+      return res.status(401).send({ message: 'Not authorized' });
+    } else {
+      await User.findByIdAndUpdate(req.user.id, { token: null });
+    }
+
+    console.log(user);
+
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getCurrent = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    if (user === null) {
+      return res.status(401).send({ message: 'Not authorized' });
+    }
+    return res.status(200).json({
+      id: user._id,
+      email: user.email,
+    });
   } catch (error) {
     next(error);
   }
