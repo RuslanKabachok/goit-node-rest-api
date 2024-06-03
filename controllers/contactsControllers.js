@@ -19,13 +19,12 @@ export const getOneContact = async (req, res, next) => {
   const contactId = req.params.id;
 
   try {
-    const contact = await Contact.findById(contactId);
+    const contact = await Contact.findOne({
+      _id: contactId,
+      owner: req.user.id,
+    });
 
     if (contact === null) {
-      return res.status(404).send('Contact not found');
-    }
-
-    if (contact.owner.toString() !== req.user.id.toString()) {
       return res.status(404).send('Contact not found');
     }
 
@@ -39,17 +38,19 @@ export const deleteContact = async (req, res) => {
   const contactId = req.params.id;
 
   try {
-    const result = await Contact.findById(contactId);
+    const result = await Contact.findOne({
+      _id: contactId,
+      owner: req.user.id,
+    });
 
     if (result === null) {
       return res.status(404).send('Contact not found');
     }
 
-    if (result.owner.toString() !== req.user.id.toString()) {
-      return res.status(404).send('Contact not found');
-    }
-
-    await Contact.findByIdAndDelete(contactId);
+    await Contact.findOneAndDelete({
+      _id: contactId,
+      owner: req.user.id,
+    });
 
     res.status(200).send('Contact deleted successfully');
   } catch (error) {
@@ -92,19 +93,25 @@ export const updateContact = async (req, res, next) => {
   };
 
   try {
-    const result = await Contact.findById(contactId);
+    const result = await Contact.findOne({
+      _id: contactId,
+      owner: req.user.id,
+    });
 
     if (result === null) {
       return res.status(404).send('Contact not found');
     }
 
-    if (result.owner.toString() !== req.user.id.toString()) {
-      return res.status(404).send('Contact not found');
-    }
-
-    const updatedContact = await Contact.findByIdAndUpdate(contactId, contact, {
-      new: true,
-    });
+    const updatedContact = await Contact.findOneAndUpdate(
+      {
+        _id: contactId,
+        owner: req.user.id,
+      },
+      contact,
+      {
+        new: true,
+      }
+    );
 
     res.send(updatedContact);
   } catch (error) {
@@ -124,19 +131,25 @@ export const updateStatusContact = async (req, res, next) => {
   const favorite = { favorite: req.body.favorite };
 
   try {
-    const result = await Contact.findById(contactId);
+    const result = await Contact.findOne({
+      _id: contactId,
+      owner: req.user.id,
+    });
 
     if (result === null) {
       return res.status(404).send('Not found');
     }
 
-    if (result.owner.toString() !== req.user.id.toString()) {
-      return res.status(404).send('Contact not found');
-    }
-
-    const update = await Contact.findByIdAndUpdate(contactId, favorite, {
-      new: true,
-    });
+    const update = await Contact.findOneAndUpdate(
+      {
+        _id: contactId,
+        owner: req.user.id,
+      },
+      favorite,
+      {
+        new: true,
+      }
+    );
 
     return res.status(200).json(update);
   } catch (error) {
