@@ -7,7 +7,7 @@ import Contact from '../models/contact.js';
 
 export const getAllContacts = async (req, res, next) => {
   try {
-    const contacts = await Contact.find();
+    const contacts = await Contact.find({ owner: req.user.id });
 
     res.send(contacts);
   } catch (error) {
@@ -20,10 +20,16 @@ export const getOneContact = async (req, res, next) => {
 
   try {
     const contact = await Contact.findById(contactId);
+
     if (contact === null) {
-      return res.status(404).send('Book not found');
+      return res.status(404).send('Contact not found');
     }
-    res.send(contact);
+
+    if (contact.owner.toString() !== req.user.id.toString()) {
+      return res.status(404).send('Contact not found');
+    }
+
+    res.status(200).send(contact);
   } catch (error) {
     next(error);
   }
@@ -33,11 +39,19 @@ export const deleteContact = async (req, res) => {
   const contactId = req.params.id;
 
   try {
-    const result = await Contact.findByIdAndDelete(contactId);
+    const result = await Contact.findById(contactId);
+
     if (result === null) {
-      return res.status(404).send('Book not found');
+      return res.status(404).send('Contact not found');
     }
-    res.send(contactId);
+
+    if (result.owner.toString() !== req.user.id.toString()) {
+      return res.status(404).send('Contact not found');
+    }
+
+    await Contact.findByIdAndDelete(contactId);
+
+    res.status(200).send('Contact deleted successfully');
   } catch (error) {
     next(error);
   }
@@ -78,15 +92,21 @@ export const updateContact = async (req, res, next) => {
   };
 
   try {
-    const result = await Contact.findByIdAndUpdate(contactId, contact, {
+    const result = await Contact.findById(contactId);
+
+    if (result === null) {
+      return res.status(404).send('Contact not found');
+    }
+
+    if (result.owner.toString() !== req.user.id.toString()) {
+      return res.status(404).send('Contact not found');
+    }
+
+    const updatedContact = await Contact.findByIdAndUpdate(contactId, contact, {
       new: true,
     });
 
-    if (result === null) {
-      return res.status(404).send('Book not found');
-    }
-
-    res.send(result);
+    res.send(updatedContact);
   } catch (error) {
     next(error);
   }
@@ -104,13 +124,21 @@ export const updateStatusContact = async (req, res, next) => {
   const favorite = { favorite: req.body.favorite };
 
   try {
-    const result = await Contact.findByIdAndUpdate(contactId, favorite, {
-      new: true,
-    });
+    const result = await Contact.findById(contactId);
+
     if (result === null) {
       return res.status(404).send('Not found');
     }
-    return res.status(200).json(result);
+
+    if (result.owner.toString() !== req.user.id.toString()) {
+      return res.status(404).send('Contact not found');
+    }
+
+    const update = await Contact.findByIdAndUpdate(contactId, favorite, {
+      new: true,
+    });
+
+    return res.status(200).json(update);
   } catch (error) {
     next(error);
   }
