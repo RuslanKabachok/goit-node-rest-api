@@ -1,3 +1,6 @@
+import * as fs from 'node:fs/promises';
+import path from 'node:path';
+
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -106,7 +109,22 @@ export const getCurrent = async (req, res, next) => {
 
 export const uploadAvatar = async (req, res, next) => {
   try {
-    res.send('Upload').status(200);
+    await fs.rename(
+      req.file.path,
+      path.resolve('public/avatars', req.file.filename)
+    );
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { avatarURL: req.file.filename },
+      { new: true }
+    );
+
+    if (user === null) {
+      return res.status(404).send({ message: 'User nof found' });
+    }
+
+    res.send(user);
   } catch (error) {
     next(error);
   }
