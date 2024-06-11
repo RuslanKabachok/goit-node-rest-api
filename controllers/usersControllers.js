@@ -3,6 +3,8 @@ import path from 'node:path';
 
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import gravatar from 'gravatar';
+import jimp from 'jimp';
 
 import User from '../models/users.js';
 import { userSchema } from '../schemas/usersSchemas.js';
@@ -26,9 +28,12 @@ export const register = async (req, res, next) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
+    const avatarUrl = gravatar.url(email);
+
     const newUser = await User.create({
       email: emailInLowerCase,
       password: passwordHash,
+      avatarURL: avatarUrl,
     });
 
     res.status(201).send(newUser);
@@ -109,10 +114,12 @@ export const getCurrent = async (req, res, next) => {
 
 export const uploadAvatar = async (req, res, next) => {
   try {
-    await fs.rename(
-      req.file.path,
-      path.resolve('public/avatars', req.file.filename)
-    );
+    const newPath = path.resolve('public/avatars', req.file.filename);
+
+    await fs.rename(req.file.path, newPath);
+
+    const image = await jimp.read(newPath);
+    await image.resize(250, 250).writeAsync(newPath);
 
     const user = await User.findByIdAndUpdate(
       req.user.id,
@@ -121,10 +128,30 @@ export const uploadAvatar = async (req, res, next) => {
     );
 
     if (user === null) {
-      return res.status(404).send({ message: 'User nof found' });
+      return res.status(404).send({ message: 'Could not upload avatar' });
     }
 
-    res.send(user);
+    res.status(200).send({ message: user.avatarURL });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAvatar = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    if (user === null) {
+      return res.status(404).send({ message: 'User not found' });
+    }
+
+    if (user.avatarURL === null) {
+      return res.status(404).send({ message: 'Avatar not found' });
+    }
+
+    const avatarPath = path.resolve('public/avatars', user.avatarURL);
+
+    res.sendFile(avatarPath);
   } catch (error) {
     next(error);
   }

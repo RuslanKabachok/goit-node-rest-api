@@ -1,3 +1,4 @@
+import path from 'node:path';
 import 'dotenv/config';
 import express from 'express';
 import morgan from 'morgan';
@@ -13,6 +14,11 @@ app.use(morgan('tiny'));
 app.use(cors());
 app.use(express.json());
 
+app.use(
+  '/avatars',
+  authMiddleware,
+  express.static(path.resolve('public/avatars'))
+);
 app.use('/api/contacts', authMiddleware, contactsRouter);
 app.use('/api/users', usersRouter);
 

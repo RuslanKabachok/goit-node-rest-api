@@ -5,6 +5,7 @@ import {
   logout,
   getCurrent,
   uploadAvatar,
+  getAvatar,
 } from '../controllers/usersControllers.js';
 import authMiddleware from '../midlleware/auth.js';
 import uploadMiddleware from '../midlleware/upload.js';
@@ -22,5 +23,6 @@ usersRouter.patch(
   uploadMiddleware.single('avatar'),
   uploadAvatar
 );
+usersRouter.get('/avatars', authMiddleware, getAvatar);
 
 export default usersRouter;
