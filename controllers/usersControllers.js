@@ -103,3 +103,11 @@ export const getCurrent = async (req, res, next) => {
     next(error);
   }
 };
+
+export const uploadAvatar = async (req, res, next) => {
+  try {
+    res.send('Upload').status(200);
+  } catch (error) {
+    next(error);
+  }
+};
