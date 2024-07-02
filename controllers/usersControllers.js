@@ -1,154 +1,25 @@
-import * as fs from 'node:fs/promises';
-import path from 'node:path';
+import createHttpError from 'http-errors';
 
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import jimp from 'jimp';
+import { findUser, signup } from '../services/auth-services.js';
 
-import User from '../models/users.js';
-import { userSchema } from '../schemas/usersSchemas.js';
+export const signupController = async (req, res) => {
+  const { email } = req.body;
 
-export const register = async (req, res, next) => {
-  const { password, email } = req.body;
+  const user = await findUser({ email });
 
-  const { error } = userSchema.validate({ password, email });
-
-  if (error) {
-    return res.status(400).json({ message: error.message });
+  if (user) {
+    throw createHttpError(409, 'Email already in use');
   }
-  const emailInLowerCase = email.toLowerCase();
+  const newUser = await signup(req.body);
 
-  try {
-    const user = await User.findOne({ email: emailInLowerCase });
+  const data = {
+    name: newUser.name,
+    email: newUser.email,
+  };
 
-    if (user !== null) {
-      return res.status(409).send({ message: 'Email in use' });
-    }
-
-    const passwordHash = await bcrypt.hash(password, 10);
-
-    const newUser = await User.create({
-      email: emailInLowerCase,
-      password: passwordHash,
-    });
-
-    res.status(201).send(newUser);
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const login = async (req, res, next) => {
-  const { email, password } = req.body;
-  console.log(req.body);
-
-  const emailInLowerCase = email.toLowerCase();
-
-  try {
-    const user = await User.findOne({ email: emailInLowerCase });
-
-    if (user === null) {
-      return res.status(401).send({ message: 'Email or password is wrong' });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (isMatch === false) {
-      return res.status(401).send({ message: 'Email or password is wrong' });
-    }
-
-    const token = jwt.sign(
-      {
-        id: user._id,
-        password: user.password,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '10h' },
-    );
-
-    await User.findByIdAndUpdate(user._id, { token });
-
-    res.send({ token });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const logout = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.user.id);
-
-    if (user === null) {
-      return res.status(401).send({ message: 'Not authorized' });
-    } else {
-      await User.findByIdAndUpdate(req.user.id, { token: null });
-    }
-
-    console.log(user);
-
-    res.status(204).end();
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const getCurrent = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.user.id);
-
-    if (user === null) {
-      return res.status(401).send({ message: 'Not authorized' });
-    }
-    return res.status(200).json({
-      id: user._id,
-      email: user.email,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const uploadAvatar = async (req, res, next) => {
-  try {
-    const newPath = path.resolve('public/avatars', req.file.filename);
-
-    await fs.rename(req.file.path, newPath);
-
-    const image = await jimp.read(newPath);
-    await image.resize(250, 250).writeAsync(newPath);
-
-    const user = await User.findByIdAndUpdate(
-      req.user.id,
-      { avatarURL: req.file.filename },
-      { new: true },
-    );
-
-    if (user === null) {
-      return res.status(404).send({ message: 'Could not upload avatar' });
-    }
-
-    res.status(200).send({ message: user.avatarURL });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const getAvatar = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.user.id);
-
-    if (user === null) {
-      return res.status(404).send({ message: 'User not found' });
-    }
-
-    if (user.avatarURL === null) {
-      return res.status(404).send({ message: 'Avatar not found' });
-    }
-
-    const avatarPath = path.resolve('public/avatars', user.avatarURL);
-
-    res.sendFile(avatarPath);
-  } catch (error) {
-    next(error);
-  }
+  res.status(201).json({
+    status: 201,
+    data,
+    message: 'User signup successfuly',
+  });
 };

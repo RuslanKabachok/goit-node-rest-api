@@ -2,9 +2,9 @@
   "name": "goit-node-rest-api",
   "type": "module",
   "scripts": {
-    "lint": "eslint ./app.js",
-    "start": "node ./app.js",
-    "dev": "nodemon ./app.js"
+    "lint": "eslint ./index.js",
+    "start": "node ./index.js",
+    "dev": "nodemon ./index.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

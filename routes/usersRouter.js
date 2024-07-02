@@ -1,28 +1,15 @@
 import express from 'express';
-import {
-  register,
-  login,
-  logout,
-  getCurrent,
-  uploadAvatar,
-  getAvatar,
-} from '../controllers/usersControllers.js';
-import authMiddleware from '../midlleware/auth.js';
-import uploadMiddleware from '../midlleware/upload.js';
+import ctrlWrapper from '../utils/ctrlWrapper.js';
+import validateBody from '../utils/validateBody.js';
+import { signupController } from '../controllers/usersControllers.js';
+import { userSignupSchema } from '../validation/user-schemas.js';
 
-const usersRouter = express.Router();
-const jsonParser = express.json();
+const authRouter = express.Router();
 
-usersRouter.post('/auth/register', jsonParser, register);
-usersRouter.post('/login', jsonParser, login);
-usersRouter.post('/logout', authMiddleware, logout);
-usersRouter.get('/current', authMiddleware, getCurrent);
-usersRouter.patch(
-  '/avatars',
-  authMiddleware,
-  uploadMiddleware.single('avatar'),
-  uploadAvatar,
+authRouter.post(
+  '/signup',
+  validateBody(userSignupSchema),
+  ctrlWrapper(signupController),
 );
-usersRouter.get('/avatars', authMiddleware, getAvatar);
 
-export default usersRouter;
+export default authRouter;
