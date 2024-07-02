@@ -3,12 +3,15 @@ import 'dotenv/config';
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
+import initMongoDB from './db.js';
 import contactsRouter from './routes/contactsRouter.js';
 import usersRouter from './routes/usersRouter.js';
 import authMiddleware from './midlleware/auth.js';
 import './db.js';
 
 const app = express();
+
+initMongoDB();
 
 app.use(morgan('tiny'));
 app.use(cors());
@@ -17,7 +20,7 @@ app.use(express.json());
 app.use(
   '/avatars',
   authMiddleware,
-  express.static(path.resolve('public/avatars'))
+  express.static(path.resolve('public/avatars')),
 );
 app.use('/api/contacts', authMiddleware, contactsRouter);
 app.use('/api/users', usersRouter);

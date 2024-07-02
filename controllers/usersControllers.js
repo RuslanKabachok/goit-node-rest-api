@@ -3,7 +3,6 @@ import path from 'node:path';
 
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import gravatar from 'gravatar';
 import jimp from 'jimp';
 
 import User from '../models/users.js';
@@ -28,12 +27,9 @@ export const register = async (req, res, next) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const avatarUrl = gravatar.url(email);
-
     const newUser = await User.create({
       email: emailInLowerCase,
       password: passwordHash,
-      avatarURL: avatarUrl,
     });
 
     res.status(201).send(newUser);
@@ -67,7 +63,7 @@ export const login = async (req, res, next) => {
         password: user.password,
       },
       process.env.JWT_SECRET,
-      { expiresIn: '10h' }
+      { expiresIn: '10h' },
     );
 
     await User.findByIdAndUpdate(user._id, { token });
@@ -124,7 +120,7 @@ export const uploadAvatar = async (req, res, next) => {
     const user = await User.findByIdAndUpdate(
       req.user.id,
       { avatarURL: req.file.filename },
-      { new: true }
+      { new: true },
     );
 
     if (user === null) {
