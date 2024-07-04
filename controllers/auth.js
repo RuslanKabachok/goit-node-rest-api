@@ -2,6 +2,7 @@ import createHttpError from 'http-errors';
 
 import { findUser, signup } from '../services/auth.js';
 import { compareHash } from '../utils/hash.js';
+import { createSession } from '../services/session-services.js';
 
 export const signupController = async (req, res) => {
   const { email } = req.body;
@@ -40,10 +41,10 @@ export const signinController = async (req, res) => {
     throw createHttpError(401, 'Password is invalid');
   }
 
+  const session = await createSession(user._id);
+
   const data = {
-    name: user.name,
-    email: user.email,
-    //додати accessToken
+    accessToken: session.accessToken,
   };
 
   res.status(200).json({
