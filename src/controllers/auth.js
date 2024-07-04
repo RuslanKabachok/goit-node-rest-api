@@ -41,17 +41,22 @@ export const signinController = async (req, res) => {
     throw createHttpError(401, 'Password is invalid');
   }
 
-  const { accessToken, refreshToken } = await createSession(user._id);
+  const { accessToken, refreshToken, _id, refreshTokenValidUntil } =
+    await createSession(user._id);
 
-  const data = {
-    accessToken: session.accessToken,
-  };
+  res.cookie('refreshToken', refreshToken, {
+    hhtpOnly: true,
+    expires: refreshTokenValidUntil,
+  });
 
-  res.cookie('refreshToken');
+  res.cookie('sessionId', _id, {
+    hhtpOnly: true,
+    expires: refreshTokenValidUntil,
+  });
 
-  res.status(200).json({
+  res.json({
     status: 200,
-    data,
     message: 'Successfully logged in an user!',
+    data: { accessToken: accessToken },
   });
 };
