@@ -50,7 +50,7 @@ export const signinController = async (req, res) => {
   });
 
   res.cookie('sessionId', _id, {
-    hhtpOnly: true,
+    httpOnly: true,
     expires: refreshTokenValidUntil,
   });
 
