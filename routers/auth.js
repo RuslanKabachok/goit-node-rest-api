@@ -1,15 +1,24 @@
 import express from 'express';
 import ctrlWrapper from '../utils/ctrlWrapper.js';
 import validateBody from '../utils/validateBody.js';
-import { signupController } from '../controllers/usersControllers.js';
-import { userSignupSchema } from '../validation/user-schemas.js';
+import { signupController, signinController } from '../controllers/auth.js';
+import {
+  userSignupSchema,
+  userSigninSchema,
+} from '../validation/user-schemas.js';
 
 const authRouter = express.Router();
 
 authRouter.post(
-  '/signup',
+  '/register',
   validateBody(userSignupSchema),
   ctrlWrapper(signupController),
+);
+
+authRouter.post(
+  '/login',
+  validateBody(userSigninSchema),
+  ctrlWrapper(signinController),
 );
 
 export default authRouter;

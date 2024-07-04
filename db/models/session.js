@@ -7,3 +7,5 @@ const sessionSchema = new mongoose.Schema({
   accessTokenValidUntil: { type: Date, required: true },
   refreshTokenValidUntil: { type: Date, required: true },
 });
+
+// export default mongoose.model('Session', sessionSchema);
