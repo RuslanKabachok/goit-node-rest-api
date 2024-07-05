@@ -3,11 +3,11 @@ import {
   updateContactSchema,
   updateFavoriteSchema,
 } from '../schemas/contactsSchemas.js';
-import Contact from '../models/contact.js';
+import Contact from '../db/models/Contact.js';
 
 export const getAllContacts = async (req, res, next) => {
   try {
-    const contacts = await Contact.find({ owner: req.user.id });
+    const contacts = await Contact.find({ userId: req.user.id });
 
     res.send(contacts);
   } catch (error) {
@@ -21,7 +21,7 @@ export const getOneContact = async (req, res, next) => {
   try {
     const contact = await Contact.findOne({
       _id: contactId,
-      owner: req.user.id,
+      userId: req.user.id,
     });
 
     if (contact === null) {
@@ -40,7 +40,7 @@ export const deleteContact = async (req, res) => {
   try {
     const result = await Contact.findOne({
       _id: contactId,
-      owner: req.user.id,
+      userId: req.user.id,
     });
 
     if (result === null) {
@@ -49,7 +49,7 @@ export const deleteContact = async (req, res) => {
 
     await Contact.findOneAndDelete({
       _id: contactId,
-      owner: req.user.id,
+      userId: req.user.id,
     });
 
     res.status(200).send('Contact deleted successfully');
@@ -70,7 +70,7 @@ export const createContact = async (req, res, next) => {
     email: req.body.email,
     phone: req.body.phone,
     favorite: req.body.favorite,
-    owner: req.user.id,
+    userId: req.user.id,
   };
 
   try {
@@ -95,7 +95,7 @@ export const updateContact = async (req, res, next) => {
   try {
     const result = await Contact.findOne({
       _id: contactId,
-      owner: req.user.id,
+      userId: req.user.id,
     });
 
     if (result === null) {
@@ -105,12 +105,12 @@ export const updateContact = async (req, res, next) => {
     const updatedContact = await Contact.findOneAndUpdate(
       {
         _id: contactId,
-        owner: req.user.id,
+        userId: req.user.id,
       },
       contact,
       {
         new: true,
-      }
+      },
     );
 
     res.send(updatedContact);
@@ -133,7 +133,7 @@ export const updateStatusContact = async (req, res, next) => {
   try {
     const result = await Contact.findOne({
       _id: contactId,
-      owner: req.user.id,
+      userId: req.user.id,
     });
 
     if (result === null) {
@@ -143,12 +143,12 @@ export const updateStatusContact = async (req, res, next) => {
     const update = await Contact.findOneAndUpdate(
       {
         _id: contactId,
-        owner: req.user.id,
+        userId: req.user.id,
       },
       favorite,
       {
         new: true,
-      }
+      },
     );
 
     return res.status(200).json(update);
