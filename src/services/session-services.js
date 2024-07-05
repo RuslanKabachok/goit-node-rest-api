@@ -6,6 +6,7 @@ import {
 } from '../constants/index.js';
 
 export const createSession = async (userId) => {
+  await Session.deleteOne({ userId });
   const accessToken = randomBytes(30).toString('base64');
   const refreshToken = randomBytes(30).toString('base64');
 
@@ -22,3 +23,5 @@ export const createSession = async (userId) => {
 
   return result;
 };
+
+export const findSesion = (filter) => Session.findOne(filter);

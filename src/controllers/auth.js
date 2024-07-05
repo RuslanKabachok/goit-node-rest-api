@@ -57,6 +57,6 @@ export const signinController = async (req, res) => {
   res.json({
     status: 200,
     message: 'Successfully logged in an user!',
-    data: { accessToken: accessToken },
+    data: { accessToken },
   });
 };
