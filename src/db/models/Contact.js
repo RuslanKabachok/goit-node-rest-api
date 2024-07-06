@@ -11,12 +11,19 @@ const contactSchema = new mongoose.Schema(
     email: {
       type: String,
     },
-    phone: {
+    phoneNumber: {
       type: String,
+      required: true,
     },
-    favorite: {
+    isFavourite: {
       type: Boolean,
       default: false,
+    },
+    contactType: {
+      type: String,
+      enum: ['work', 'home', 'personal'],
+      required: true,
+      default: 'personal',
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -36,4 +43,6 @@ contactSchema.pre('findOneAndUpdate', setUpdateSettings);
 
 contactSchema.post('findOneAndUpdate', mongooseSaveError);
 
-export default mongoose.model('Contact', contactSchema);
+const Contact = mongoose.model('Contact', contactSchema);
+
+export default Contact;

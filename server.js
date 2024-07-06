@@ -4,7 +4,7 @@ import pino from 'pino-http';
 import cookieParser from 'cookie-parser';
 
 import authRouter from './src/routers/auth.js';
-// import contactsRouter from './src/routers/contactsRouter.js';
+import contactsRouter from './src/routers/contactsRouter.js';
 
 import notFoundHandler from './src/midlleware/notFoundHandler.js';
 import errorHandler from './src/midlleware/errorHandler.js';
@@ -13,7 +13,7 @@ import env from './src/utils/env.js';
 
 const port = env('PORT', '3000');
 
-const startServer = () => {
+const setupServer = () => {
   const app = express();
 
   const logger = pino({
@@ -28,7 +28,7 @@ const startServer = () => {
   app.use(express.json());
 
   app.use('/api/auth', authRouter);
-  // app.use('/api/contacts', contactsRouter);
+  app.use('/api/contacts', contactsRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
@@ -36,4 +36,4 @@ const startServer = () => {
   app.listen(port, () => console.log(`Server running on ${port} PORT`));
 };
 
-export default startServer;
+export default setupServer;

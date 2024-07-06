@@ -4,15 +4,16 @@ import {
   updateFavoriteSchema,
 } from '../schemas/contactsSchemas.js';
 import Contact from '../db/models/Contact.js';
+import { getContacts } from '../services/contacts.js';
 
-export const getAllContacts = async (req, res, next) => {
-  try {
-    const contacts = await Contact.find({ userId: req.user.id });
+export const getAllContactsController = async (req, res) => {
+  const contacts = await getContacts();
 
-    res.send(contacts);
-  } catch (error) {
-    next(error);
-  }
+  res.json({
+    contacts,
+    status: 200,
+    message: 'Successfully found contacts!',
+  });
 };
 
 export const getOneContact = async (req, res, next) => {
