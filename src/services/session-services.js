@@ -25,3 +25,7 @@ export const createSession = async (userId) => {
 };
 
 export const findSesion = (filter) => Session.findOne(filter);
+
+export const deleteSession = async (filter) => {
+  Session.deleteOne(filter);
+};

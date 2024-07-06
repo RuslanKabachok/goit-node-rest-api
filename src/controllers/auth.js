@@ -2,7 +2,11 @@ import createHttpError from 'http-errors';
 
 import { findUser, signup } from '../services/auth.js';
 import { compareHash } from '../utils/hash.js';
-import { createSession, findSesion } from '../services/session-services.js';
+import {
+  createSession,
+  findSesion,
+  deleteSession,
+} from '../services/session-services.js';
 
 const setupResponseSession = (
   res,
@@ -92,4 +96,17 @@ export const refreshController = async (req, res) => {
     message: 'Successfully logged in an user!',
     data: { accessToken: newSession.accessToken },
   });
+};
+
+export const logoutController = async (req, res) => {
+  const { sessionId } = req.cookies;
+
+  if (sessionId) {
+    throw createHttpError(401, 'Session nof found');
+  }
+
+  await deleteSession({ _id: sessionId });
+
+  res.clearCookie('sessionId');
+  res.clearCookie('refreshToken');
 };
