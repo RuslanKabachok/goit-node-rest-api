@@ -3,13 +3,13 @@ import cors from 'cors';
 import pino from 'pino-http';
 import cookieParser from 'cookie-parser';
 
-import authRouter from './src/routers/auth.js';
-import contactsRouter from './src/routers/contactsRouter.js';
+import authRouter from './routers/auth.js';
+import contactsRouter from './routers/contactsRouter.js';
 
-import notFoundHandler from './src/midlleware/notFoundHandler.js';
-import errorHandler from './src/midlleware/errorHandler.js';
+import notFoundHandler from './midlleware/notFoundHandler.js';
+import errorHandler from './midlleware/errorHandler.js';
 
-import env from './src/utils/env.js';
+import env from './utils/env.js';
 
 const port = env('PORT', '3000');
 
