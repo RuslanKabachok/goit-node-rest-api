@@ -4,7 +4,7 @@ import pino from 'pino-http';
 import cookieParser from 'cookie-parser';
 
 import authRouter from './routers/auth.js';
-import contactsRouter from './routers/contactsRouter.js';
+import contactsRouter from './routers/contacts.js';
 
 import notFoundHandler from './midlleware/notFoundHandler.js';
 import errorHandler from './midlleware/errorHandler.js';
