@@ -5,7 +5,6 @@ import {
   getOneContactController,
   deleteContactConroller,
   createContactController,
-  updateContact,
   updateContactContorller,
 } from '../controllers/contacts.js';
 
@@ -24,6 +23,6 @@ contactsRouter.patch('/:id', ctrlWrapper(updateContactContorller));
 
 contactsRouter.delete('/:id', ctrlWrapper(deleteContactConroller));
 
-contactsRouter.put('/:id', updateContact);
+contactsRouter.put('/:id', updateContactContorller);
 
 export default contactsRouter;
