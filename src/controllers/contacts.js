@@ -12,6 +12,7 @@ import {
   deleteContact,
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
+import mongoose from 'mongoose';
 
 export const getAllContactsController = async (req, res) => {
   const contacts = await getContacts();
@@ -35,7 +36,7 @@ export const getOneContactController = async (req, res, next) => {
   res.json({
     status: 200,
     contact,
-    message: `Successfully found contact with id {contactId}!`,
+    message: `Successfully found contact with id ${contactId}!`,
   });
 };
 
@@ -55,7 +56,9 @@ export const deleteContactConroller = async (req, res) => {
 };
 
 export const createContactController = async (req, res, next) => {
-  const data = await addContact(req.body);
+  const contactData = { ...req.body, userId: new mongoose.Types.ObjectId() };
+
+  const data = await addContact(contactData);
 
   res
     .status(201)

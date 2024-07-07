@@ -1,6 +1,6 @@
 import createHttpError from 'http-errors';
-import { findSesion } from '../services/session-services';
-import { findUser } from '../services/auth';
+import { findSesion } from '../services/session-services.js';
+import { findUser } from '../services/auth.js';
 
 const authenticate = async (req, res, next) => {
   const authHeader = req.get('Authorization');

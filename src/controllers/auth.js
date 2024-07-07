@@ -93,7 +93,7 @@ export const refreshController = async (req, res) => {
 
   res.json({
     status: 200,
-    message: 'Successfully logged in an user!',
+    message: 'Successfully refreshed a session!',
     data: { accessToken: newSession.accessToken },
   });
 };
@@ -102,7 +102,7 @@ export const logoutController = async (req, res) => {
   const { sessionId } = req.cookies;
 
   if (sessionId) {
-    throw createHttpError(401, 'Session nof found');
+    throw createHttpError(401, 'Session not found');
   }
 
   await deleteSession({ _id: sessionId });
