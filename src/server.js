@@ -26,6 +26,7 @@ const setupServer = () => {
   app.use(cors());
   app.use(cookieParser);
   app.use(express.json());
+  app.use(cookieParser());
 
   app.use('/api/auth', authRouter);
   app.use('/api/contacts', contactsRouter);

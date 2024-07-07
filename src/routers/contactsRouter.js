@@ -1,7 +1,7 @@
 import express from 'express';
 import {
   getAllContactsController,
-  getOneContact,
+  getOneContactController,
   deleteContact,
   createContact,
   updateContact,
@@ -13,7 +13,7 @@ const contactsRouter = express.Router();
 
 contactsRouter.get('/', ctrlWrapper(getAllContactsController));
 
-contactsRouter.get('/:id', getOneContact);
+contactsRouter.get('/:id', ctrlWrapper(getOneContactController));
 
 contactsRouter.delete('/:id', deleteContact);
 

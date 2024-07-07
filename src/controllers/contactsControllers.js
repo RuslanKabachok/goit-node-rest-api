@@ -4,7 +4,7 @@ import {
   updateFavoriteSchema,
 } from '../schemas/contactsSchemas.js';
 import Contact from '../db/models/Contact.js';
-import { getContacts } from '../services/contacts.js';
+import { getContacts, getContactById } from '../services/contacts.js';
 
 export const getAllContactsController = async (req, res) => {
   const contacts = await getContacts();
@@ -16,23 +16,20 @@ export const getAllContactsController = async (req, res) => {
   });
 };
 
-export const getOneContact = async (req, res, next) => {
+export const getOneContactController = async (req, res, next) => {
   const contactId = req.params.id;
 
-  try {
-    const contact = await Contact.findOne({
-      _id: contactId,
-      userId: req.user.id,
-    });
+  const contact = await getContactById(contactId);
 
-    if (contact === null) {
-      return res.status(404).send('Contact not found');
-    }
-
-    res.status(200).send(contact);
-  } catch (error) {
-    next(error);
+  if (!contact) {
+    throw createHttpError(404, `Contact with id ${id} not found`);
   }
+
+  res.json({
+    status: 200,
+    contact,
+    message: `Successfully found contact with id {contactId}!`,
+  });
 };
 
 export const deleteContact = async (req, res) => {
