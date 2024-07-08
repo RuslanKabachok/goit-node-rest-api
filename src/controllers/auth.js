@@ -101,7 +101,7 @@ export const refreshController = async (req, res) => {
 export const logoutController = async (req, res) => {
   const { sessionId } = req.cookies;
 
-  if (sessionId) {
+  if (!sessionId) {
     throw createHttpError(401, 'Session not found');
   }
 
@@ -109,4 +109,6 @@ export const logoutController = async (req, res) => {
 
   res.clearCookie('sessionId');
   res.clearCookie('refreshToken');
+
+  res.status(204).send();
 };

@@ -19,17 +19,33 @@ const contactsRouter = express.Router();
 
 contactsRouter.get('/', authenticate, ctrlWrapper(getAllContactsController));
 
-contactsRouter.get('/:id', isValidId, ctrlWrapper(getOneContactController));
+contactsRouter.get(
+  '/:id',
+  authenticate,
+  isValidId,
+  ctrlWrapper(getOneContactController),
+);
 
 contactsRouter.post(
   '/',
+  authenticate,
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
 
-contactsRouter.patch('/:id', isValidId, ctrlWrapper(updateContactContorller));
+contactsRouter.patch(
+  '/:id',
+  authenticate,
+  isValidId,
+  ctrlWrapper(updateContactContorller),
+);
 
-contactsRouter.delete('/:id', isValidId, ctrlWrapper(deleteContactConroller));
+contactsRouter.delete(
+  '/:id',
+  authenticate,
+  isValidId,
+  ctrlWrapper(deleteContactConroller),
+);
 
 // contactsRouter.put('/:id', updateContactContorller);
 
