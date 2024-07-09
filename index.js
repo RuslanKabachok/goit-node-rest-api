@@ -10,6 +10,3 @@ const bootstrap = async () => {
 };
 
 bootstrap();
-
-// initMongoConnection();
-// setupServer();

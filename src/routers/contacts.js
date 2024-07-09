@@ -47,6 +47,4 @@ contactsRouter.delete(
   ctrlWrapper(deleteContactConroller),
 );
 
-// contactsRouter.put('/:id', updateContactContorller);
-
 export default contactsRouter;

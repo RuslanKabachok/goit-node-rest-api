@@ -1,10 +1,4 @@
 import {
-  createContactSchema,
-  updateContactSchema,
-  updateFavoriteSchema,
-} from '../schemas/contactsSchemas.js';
-import Contact from '../db/models/Contact.js';
-import {
   getContacts,
   getContactById,
   addContact,
@@ -82,42 +76,4 @@ export const updateContactContorller = async (req, res, next) => {
     message,
     data: data.value,
   });
-};
-
-export const updateStatusContact = async (req, res, next) => {
-  const { error } = updateFavoriteSchema.validate(req.body);
-
-  if (error) {
-    return res.status(400).json({ message: error.message });
-  }
-
-  const contactId = req.params.id;
-
-  const favorite = { favorite: req.body.favorite };
-
-  try {
-    const result = await Contact.findOne({
-      _id: contactId,
-      userId: req.user.id,
-    });
-
-    if (result === null) {
-      return res.status(404).send('Not found');
-    }
-
-    const update = await Contact.findOneAndUpdate(
-      {
-        _id: contactId,
-        userId: req.user.id,
-      },
-      favorite,
-      {
-        new: true,
-      },
-    );
-
-    return res.status(200).json(update);
-  } catch (error) {
-    next(error);
-  }
 };
