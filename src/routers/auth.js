@@ -15,19 +15,19 @@ import {
 const authRouter = express.Router();
 
 authRouter.post(
-  '/register',
+  '/auth/register',
   validateBody(userSignupSchema),
   ctrlWrapper(signupController),
 );
 
 authRouter.post(
-  '/login',
+  '/auth/login',
   validateBody(userSigninSchema),
   ctrlWrapper(signinController),
 );
 
-authRouter.post('/refresh', ctrlWrapper(refreshController));
+authRouter.post('/auth/refresh', ctrlWrapper(refreshController));
 
-authRouter.post('/logout', ctrlWrapper(logoutController));
+authRouter.post('/auth/logout', ctrlWrapper(logoutController));
 
 export default authRouter;

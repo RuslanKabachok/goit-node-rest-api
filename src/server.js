@@ -27,8 +27,8 @@ const setupServer = () => {
   app.use(express.json());
   app.use(cookieParser());
 
-  app.use('/api/auth', authRouter);
-  app.use('/api/contacts', contactsRouter);
+  app.use('/api', authRouter);
+  app.use('/api', contactsRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

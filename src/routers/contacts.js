@@ -17,31 +17,35 @@ import authenticate from '../midlleware/authenticate.js';
 
 const contactsRouter = express.Router();
 
-contactsRouter.get('/', authenticate, ctrlWrapper(getAllContactsController));
+contactsRouter.get(
+  '/contacts',
+  authenticate,
+  ctrlWrapper(getAllContactsController),
+);
 
 contactsRouter.get(
-  '/:id',
+  '/contacts/:id',
   authenticate,
   isValidId,
   ctrlWrapper(getOneContactController),
 );
 
 contactsRouter.post(
-  '/',
+  '/contacts',
   authenticate,
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
 
 contactsRouter.patch(
-  '/:id',
+  '/contacts/:id',
   authenticate,
   isValidId,
   ctrlWrapper(updateContactContorller),
 );
 
 contactsRouter.delete(
-  '/:id',
+  '/contacts/:id',
   authenticate,
   isValidId,
   ctrlWrapper(deleteContactConroller),
