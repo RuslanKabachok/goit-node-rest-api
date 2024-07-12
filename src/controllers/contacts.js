@@ -9,8 +9,10 @@ import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
 
 export const getAllContactsController = async (req, res) => {
-  const contacts = await getContacts();
-  console.log(contacts);
+  const contacts = await getContacts(req.user._id);
+
+  console.log(req.user._id);
+
   res.json({
     contacts,
     status: 200,
@@ -50,7 +52,7 @@ export const deleteContactConroller = async (req, res) => {
 };
 
 export const createContactController = async (req, res, next) => {
-  const contactData = { ...req.body, userId: new mongoose.Types.ObjectId() };
+  const contactData = { ...req.body, userId: req.user._id };
 
   const data = await addContact(contactData);
 
