@@ -9,3 +9,10 @@ export const signup = async (data) => {
   const hashPassword = await hashValue(password);
   return User.create({ ...data, password: hashPassword });
 };
+
+export const requestResetToken = async (email) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
+};

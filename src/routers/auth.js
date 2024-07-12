@@ -7,10 +7,12 @@ import {
   refreshController,
   logoutController,
 } from '../controllers/auth.js';
+import { requestResetEmailController } from '../controllers/auth.js';
 import {
   userSignupSchema,
   userSigninSchema,
 } from '../validation/user-schemas.js';
+import { requestResetEmailSchema } from '../validation/auth.js';
 
 const authRouter = express.Router();
 
@@ -24,6 +26,12 @@ authRouter.post(
   '/auth/login',
   validateBody(userSigninSchema),
   ctrlWrapper(signinController),
+);
+
+authRouter.post(
+  '/auth/send-reset-email',
+  validateBody(requestResetEmailSchema),
+  ctrlWrapper(requestResetEmailController),
 );
 
 authRouter.post('/auth/refresh', ctrlWrapper(refreshController));
