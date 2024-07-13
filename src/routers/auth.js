@@ -28,14 +28,14 @@ authRouter.post(
   ctrlWrapper(signinController),
 );
 
+authRouter.post('/auth/refresh', ctrlWrapper(refreshController));
+
+authRouter.post('/auth/logout', ctrlWrapper(logoutController));
+
 authRouter.post(
   '/auth/send-reset-email',
   validateBody(requestResetEmailSchema),
   ctrlWrapper(requestResetEmailController),
 );
-
-authRouter.post('/auth/refresh', ctrlWrapper(refreshController));
-
-authRouter.post('/auth/logout', ctrlWrapper(logoutController));
 
 export default authRouter;
