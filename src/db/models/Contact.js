@@ -41,8 +41,6 @@ contactSchema.post('save', mongooseSaveError);
 
 contactSchema.pre('findOneAndUpdate', setUpdateSettings);
 
-contactSchema.post('findOneAndUpdate', mongooseSaveError);
-
 const Contact = mongoose.model('Contact', contactSchema);
 
 export default Contact;
