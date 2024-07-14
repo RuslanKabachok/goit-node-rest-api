@@ -6,13 +6,17 @@ import {
   signinController,
   refreshController,
   logoutController,
+  requestResetEmailController,
+  resetPasswordController,
 } from '../controllers/auth.js';
-import { requestResetEmailController } from '../controllers/auth.js';
 import {
   userSignupSchema,
   userSigninSchema,
 } from '../validation/user-schemas.js';
-import { requestResetEmailSchema } from '../validation/auth.js';
+import {
+  requestResetEmailSchema,
+  resetPasswordSchema,
+} from '../validation/auth.js';
 
 const authRouter = express.Router();
 
@@ -36,6 +40,12 @@ authRouter.post(
   '/auth/send-reset-email',
   validateBody(requestResetEmailSchema),
   ctrlWrapper(requestResetEmailController),
+);
+
+authRouter.post(
+  '/auth/reset-password',
+  validateBody(resetPasswordSchema),
+  ctrlWrapper(resetPasswordController),
 );
 
 export default authRouter;
