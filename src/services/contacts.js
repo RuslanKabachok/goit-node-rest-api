@@ -77,3 +77,9 @@ export const upsertContact = async (filter, data, options = {}) => {
 };
 
 export const deleteContact = (filter) => Contact.findOneAndDelete(filter);
+
+// export const deleteContact = (filter) => {
+//   const result = Contact.findOneAndDelete(filter);
+//   console.log(result);
+//   return result;
+// };

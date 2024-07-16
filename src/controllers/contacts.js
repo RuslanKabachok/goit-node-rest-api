@@ -60,7 +60,7 @@ export const deleteContactConroller = async (req, res) => {
   const contact = await deleteContact({ _id: contactId, userId });
 
   if (!contact) {
-    throw createHttpError(404, `Contact with id=${contactId} not found`);
+    throw createHttpError(404, `Contact with id = ${contactId} not found`);
   }
 
   res.status(204);
@@ -92,6 +92,6 @@ export const updateContactContorller = async (req, res, next) => {
   res.json({
     status,
     message,
-    data: data.value,
+    data: data.data,
   });
 };
