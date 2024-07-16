@@ -65,7 +65,6 @@ export const deleteContactConroller = async (req, res) => {
 
   res.json({
     status: 204,
-    message: 'Delete contact success',
   });
 };
 
@@ -95,6 +94,6 @@ export const updateContactContorller = async (req, res, next) => {
   res.json({
     status,
     message,
-    data: data.value,
+    data: data.data,
   });
 };

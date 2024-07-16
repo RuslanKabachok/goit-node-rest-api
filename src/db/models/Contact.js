@@ -30,6 +30,9 @@ const contactSchema = new mongoose.Schema(
       required: true,
       ref: 'user',
     },
+    photo: {
+      type: String,
+    },
   },
   {
     versionKey: false,
