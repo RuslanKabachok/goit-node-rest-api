@@ -63,7 +63,7 @@ export const deleteContactConroller = async (req, res) => {
     throw createHttpError(404, `Contact with id = ${contactId} not found`);
   }
 
-  res.status(204);
+  res.status(204).end();
 };
 
 export const createContactController = async (req, res, next) => {
