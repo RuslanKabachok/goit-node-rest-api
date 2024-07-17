@@ -11,6 +11,8 @@ import errorHandler from './midlleware/errorHandler.js';
 
 import env from './utils/env.js';
 
+import { UPLOAD_DIR } from './constants/index.js';
+
 const port = env('PORT', '3000');
 
 const setupServer = () => {
@@ -32,6 +34,8 @@ const setupServer = () => {
 
   app.use(notFoundHandler);
   app.use(errorHandler);
+
+  app.use(express.static(UPLOAD_DIR));
 
   app.listen(port, () => console.log(`Server running on ${port} PORT`));
 };
