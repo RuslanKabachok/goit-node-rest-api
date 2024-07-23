@@ -3,12 +3,19 @@ import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
 
 import User from '../db/models/User.js';
+import Session from '../db/models/Session.js';
 
 import { SMTP } from '../constants/index.js';
 import env from '../utils/env.js';
 
 import { hashValue } from '../utils/hash.js';
 import { sendEmail } from '../utils/sendMail.js';
+import {
+  getFullNameFromGoogleTokenPayload,
+  validateGoogleOAuthCode,
+} from '../utils/googleOAuth2.js';
+
+import { createSession } from './session-services.js';
 
 export const findUser = (filter) => User.findOne(filter);
 
@@ -67,4 +74,27 @@ export const resetPassword = async (payload) => {
   const encryptedPassword = await bcrypt.hash(payload.password, 10);
 
   await User.updateOne({ _id: user._id }, { password: encryptedPassword });
+};
+
+export const loginOrSignupWithGoogle = async (code) => {
+  const loginTicket = await validateCode(code);
+  const payload = loginTicket.getPayload();
+  if (!payload) throw createHttpError(401);
+
+  let user = await User.findOne({ email: payload.email });
+  if (!user) {
+    const password = await bcrypt.hash(randomBytes(10), 10);
+    user = await User.create({
+      email: payload.email,
+      name: getFullNameFromGoogleTokenPayload(payload),
+      password,
+    });
+  }
+
+  const newSession = createSession();
+
+  return await Session.create({
+    userId: user._id,
+    ...newSession,
+  });
 };
