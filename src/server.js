@@ -8,6 +8,7 @@ import contactsRouter from './routers/contacts.js';
 
 import notFoundHandler from './midlleware/notFoundHandler.js';
 import errorHandler from './midlleware/errorHandler.js';
+import { swaggerDocs } from '../src/midlleware/swaggerDocs.js';
 
 import env from './utils/env.js';
 
@@ -36,6 +37,8 @@ const setupServer = () => {
   app.use(errorHandler);
 
   app.use(express.static(UPLOAD_DIR));
+
+  app.use('/api-docs', swaggerDocs());
 
   app.listen(port, () => console.log(`Server running on ${port} PORT`));
 };

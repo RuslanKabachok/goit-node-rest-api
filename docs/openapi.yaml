@@ -9,7 +9,7 @@ info:
 tags:
   - name: Contacts
     description: Operations about contacts.
-    - name: Auth
+  - name: Auth
     description: Auth operations.
 servers:
   - url: http://localhost:3000
@@ -18,6 +18,8 @@ paths:
   /contacts:
     post:
       $ref: ../swagger/paths/contacts/post.yaml
+    get:
+      $ref: ../swagger/paths/contacts/get.yaml
   /contacts/{id}:
     get:
       $ref: ../swagger/paths/contacts/{id}/get.yaml
