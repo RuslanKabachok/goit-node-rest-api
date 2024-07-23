@@ -2,6 +2,9 @@
   "name": "goit-node-rest-api",
   "type": "module",
   "scripts": {
+    "build": "npm run build-docs",
+    "build-docs": "redocly bundle --ext json -o docs/swagger.json",
+    "preview-docs": "redocly preview-docs",
     "lint": "eslint ./index.js",
     "start": "node ./index.js",
     "dev": "nodemon ./index.js"
@@ -27,6 +30,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.5.0",
+    "@redocly/cli": "^1.18.1",
     "eslint": "^9.5.0",
     "globals": "^15.6.0",
     "nodemon": "^3.1.0",
