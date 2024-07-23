@@ -15,8 +15,6 @@ import {
   validateGoogleOAuthCode,
 } from '../utils/googleOAuth2.js';
 
-import { createSession } from './session-services.js';
-
 export const findUser = (filter) => User.findOne(filter);
 
 export const signup = async (data) => {
@@ -77,7 +75,7 @@ export const resetPassword = async (payload) => {
 };
 
 export const loginOrSignupWithGoogle = async (code) => {
-  const loginTicket = await validateCode(code);
+  const loginTicket = await validateGoogleOAuthCode(code);
   const payload = loginTicket.getPayload();
   if (!payload) throw createHttpError(401);
 
@@ -91,10 +89,5 @@ export const loginOrSignupWithGoogle = async (code) => {
     });
   }
 
-  const newSession = createSession();
-
-  return await Session.create({
-    userId: user._id,
-    ...newSession,
-  });
+  return user;
 };

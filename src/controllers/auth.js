@@ -155,8 +155,9 @@ export const getGoogleOAuthUrlController = async (req, res) => {
 };
 
 export const loginWithGoogleController = async (req, res) => {
-  const session = await loginOrSignupWithGoogle(req.body.code);
-  createSession(res, session);
+  const user = await loginOrSignupWithGoogle(req.body.code);
+
+  const session = await createSession(user._id);
 
   res.json({
     status: 200,
