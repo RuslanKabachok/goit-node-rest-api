@@ -32,13 +32,12 @@ const setupServer = () => {
 
   app.use(authRouter);
   app.use(contactsRouter);
+  app.use('/api-docs', swaggerDocs());
 
   app.use(notFoundHandler);
   app.use(errorHandler);
 
   app.use(express.static(UPLOAD_DIR));
-
-  app.use('/api-docs', swaggerDocs());
 
   app.listen(port, () => console.log(`Server running on ${port} PORT`));
 };
